@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+
     /**
      * Create a new controller instance.
      *
@@ -24,13 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $homeMenus = [];
-        $homeMenus["イベント一覧"] = route("admin.event.index");
-        $homeMenus["イベント新規登録"] = route("admin.event.create");
-        $homeMenus["カテゴリ一覧"] = route("admin.category.index");
-        $homeMenus["カテゴリ新規登録"] = route("admin.category.create");
-
         $events = Event::with(["Category","User"])->sortable()->simplePaginate(5);
-        return view('home', compact("homeMenus","events"));
+        return view('home', compact("events"));
     }
 }

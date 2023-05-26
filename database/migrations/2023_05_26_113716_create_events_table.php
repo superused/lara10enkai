@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments("id")->unique()->comment("ID");
             $table->string("name",255)->comment("イベント名");
             $table->string("detail",255)->comment("詳細");
-            $table->integer("max_paticipant")->comment("最大参加者");
+            $table->integer("max_participant")->comment("最大参加者");
             $table->integer("category_id")->comment("カテゴリID");
             $table->integer("user_id")->comment("ユーザID");
             $table->timestamps();

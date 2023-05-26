@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
 
-class Event extends Model
+class EventUsers extends Model
 {
     use HasFactory;
     use Sortable;
@@ -17,22 +17,17 @@ class Event extends Model
 
     protected $sortable = [
         "id",
-        "name",
-        "detail",
-        "max_participant",
-        "category_id",
+        "event_id",
         "user_id",
         "created_at",
         "update_at",
     ];
 
-    
     public static $rules = [
-        "name" => "required",
+        "event_id" => "required",
     ];
 
-    public function orders()
-    {
-        return $this->hasMany(Order::class, "customer_id");
+    public function orders(){
+        return $this->hasMany(Order::class, "category_id");
     }
 }

@@ -50,6 +50,7 @@ Route::get('/admin/event/create', [App\Http\Controllers\EventController::class,'
 Route::post('/admin/event', [App\Http\Controllers\EventController::class,'store'])->name('admin.event.store');
 Route::get('/admin/event/{id}/edit', [App\Http\Controllers\EventController::class,'edit'])->name('admin.event.edit');
 Route::put('/admin/event/{id}', [App\Http\Controllers\EventController::class,'update'])->name('admin.event.update');
+Route::get('/admin/event/{id}/delete', [App\Http\Controllers\EventController::class,'delete'])->name('admin.event.delete');
 
 //category
 Route::get('/admin/category', [App\Http\Controllers\CategoryController::class,'index'])->name('admin.category.index');

@@ -26,13 +26,8 @@ class UserController extends Controller
 
     public function index()
     {
-        $homeMenus = [];
-        $homeMenus["イベント一覧"] = route("admin.event.index");
-        $homeMenus["イベント新規登録"] = route("admin.event.create");
-        $homeMenus["カテゴリ一覧"] = route("admin.category.index");
-        $homeMenus["カテゴリ新規登録"] = route("admin.category.create");
         $users = User::simplePaginate(5);
-        return view("user.index", compact("homeMenus","users"));
+        return view("user.index", compact("users"));
     }
 
     public function edit()

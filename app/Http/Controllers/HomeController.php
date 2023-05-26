@@ -25,7 +25,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $events = Event::with(["Category","User"])->sortable()->simplePaginate(5);
-        return view('home', compact("events"));
+        // $events = Event::with(["Category","User"])->sortable()->simplePaginate(5);
+        // return view('home', compact("events"));
+        $homeMenus = [];
+        $homeMenus["イベント一覧"] = route("admin.event.index");
+        $homeMenus["イベント新規登録"] = route("admin.event.create");
+        $homeMenus["カテゴリ一覧"] = route("admin.category.index");
+        $homeMenus["カテゴリ新規登録"] = route("admin.category.create");
+        return view("home", compact("homeMenus"));
+
     }
 }

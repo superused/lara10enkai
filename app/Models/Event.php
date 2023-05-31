@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Kyslik\ColumnSortable\Sortable;
 
 class Event extends Model
 {
     use HasFactory;
     use Sortable;
+    use SoftDeletes;
 
     protected $guarded = [
         "id",
@@ -23,9 +25,9 @@ class Event extends Model
         "category_id",
         "user_id",
         "created_at",
-        "update_at",
+        "updated_at",
+        "deleted_at",
     ];
-
     
     public static $rules = [
         "name" => "required",
@@ -33,6 +35,6 @@ class Event extends Model
 
     public function orders()
     {
-        return $this->hasMany(Order::class, "customer_id");
+        return $this->hasOne(Category::class, "id");
     }
 }

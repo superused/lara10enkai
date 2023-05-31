@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kyslik\ColumnSortable\Sortable;
 
-class EventUsers extends Model
+class Chats extends Model
 {
     use HasFactory;
     use Sortable;
@@ -19,21 +19,13 @@ class EventUsers extends Model
 
     protected $sortable = [
         "id",
-        "event_id",
         "user_id",
+        "event_id",
         "created_at",
         "updated_at",
     ];
 
     public static $rules = [
-        "event_id" => "required",
-    ];
-
-    public static $rules2 = [
         "user_id" => "required",
     ];
-
-    public function orders(){
-        return $this->hasMany(Order::class, "category_id");
-    }
 }

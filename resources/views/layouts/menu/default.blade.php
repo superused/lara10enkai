@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
         <div class="navbar-header">
-            <a href="{{route('home')}}" class="navbar-brand">宴会くん</a>
+            <a href="{{route('index')}}" class="navbar-brand">宴会くん</a>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{__('Toggle navigation')}}">
             <span class="navbar-toggler-icon"></span>

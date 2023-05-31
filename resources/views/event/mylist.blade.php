@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title','Event.index')
+@section('title','Event.mylist')
 
 @include('layouts.menu.admin')
 
@@ -35,7 +35,8 @@
 <td>{{$event->user_name}}</td>
 <td>{{$event->updated_at}}</td>
 <td class="actions text-nowrap">
-<a class="btn btn-primary" href="{{route('admin.event.show', $event->id)}}">表示</a>
+<a class="btn btn-primary" href="{{route('admin.event.edit', $event->id)}}">編集</a>
+<a class="btn btn-primary btn-danger" href="{{route('admin.event.delete', $event->id)}}">削除</a>
 </td>
 </tr>
 @endif

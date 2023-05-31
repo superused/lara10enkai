@@ -12,7 +12,7 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">イベント</a>
                     <ul class="dropdown-menu">
-                        <li><a class="nav-link" href="{{route('admin.event.index')}}">マイイベント一覧</a></li>
+                        <li><a class="nav-link" href="{{route('admin.event.mylist')}}">マイイベント一覧</a></li>
                         <li><a class="nav-link" href="{{route('admin.event.create')}}">新規登録</a></li>
                     </ul>
                 </li>
@@ -25,7 +25,9 @@
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto">
-                <li class="navbar-text mr-3">ようこそ、{{Auth::user()->name}}さん</li>
+            @if (Auth::check())
+                <li class="navbar-text mr-3">ようこそ、 {{Auth::user()->name}}さん</li>
+            @endif
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">管理</a>
                     <ul class="dropdown-menu">

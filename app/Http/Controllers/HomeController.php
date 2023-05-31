@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -15,7 +17,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('guest');
     }
 
     /**
@@ -25,14 +27,53 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // $events = Event::with(["Category","User"])->sortable()->simplePaginate(5);
-        // return view('home', compact("events"));
-        $homeMenus = [];
-        $homeMenus["イベント一覧"] = route("admin.event.index");
-        $homeMenus["イベント新規登録"] = route("admin.event.create");
-        $homeMenus["カテゴリ一覧"] = route("admin.category.index");
-        $homeMenus["カテゴリ新規登録"] = route("admin.category.create");
-        return view("home", compact("homeMenus"));
+        $counts = DB::table("event_users")->select("event_id", DB::raw("COUNT(event_id) as count"))
+        ->groupBy("event_id");
+        $events = DB::table("events")->select(
+        "events.id",
+        "events.name",
+        "events.max_participant",
+        "categories.name as category_name",
+        "event_users.count",
+        "events.user_id",
+        "users.name as user_name",
+        "events.updated_at",
+        "events.deleted_at",
+    )
+    ->join("categories","events.category_id", "=", "categories.id")
+    ->join("users","events.user_id", "=", "users.id")
+        ->leftjoinSub($counts, "event_users", function (JoinClause $join) {
+            $join->on("events.id", "=", "event_users.event_id");
+            //ここはプリペアードステートメントを作らないと本来はいけない。
+        })->whereNull("events.deleted_at")->simplePaginate(5);
 
+        return view("index", compact("events"));
     }
+
+    public function show($id){
+
+        $counts = DB::table("event_users")->select("event_id", DB::raw("COUNT(event_id) as count"))
+        ->groupBy("event_id");
+        $events = DB::table("events")->select(
+        "events.id",
+        "events.name",
+        "events.max_participant",
+        "categories.name as category_name",
+        "event_users.count",
+        "events.user_id",
+        "users.name as user_name",
+        "events.updated_at",
+        "events.deleted_at", 
+    )
+    ->join("categories","events.category_id", "=", "categories.id")
+    ->join("users","events.user_id", "=", "users.id")
+        ->leftjoinSub($counts, "event_users", function (JoinClause $join) {
+            $join->on("events.id", "=", "event_users.event_id");
+            //ここはプリペアードステートメントを作らないと本来はいけない。
+        })->where("events.id", "=", $id)
+        ->whereNull("events.deleted_at")->get();
+
+        return view("show", compact("events"));
+    }
+
 }

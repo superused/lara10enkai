@@ -1,13 +1,10 @@
 @extends('layouts.default')
 
-@section('title','Event.index')
+@section("title","Home.index")
 
-@include('layouts.menu.admin')
+@include("layouts.menu.default")
 
 @section('content')
-@if (session('success'))
-<div class="alert alert-success" role="alert">{{session('success')}}</div>
-@endif
 <h1 class="page-header">イベント一覧</h1>
 <table class="table table-striped" cellpadding="0" cellspaceing="0">
     <tr>
@@ -35,7 +32,7 @@
 <td>{{$event->user_name}}</td>
 <td>{{$event->updated_at}}</td>
 <td class="actions text-nowrap">
-<a class="btn btn-primary" href="{{route('admin.event.show', $event->id)}}">表示</a>
+<a class="btn btn-primary" href="{{route('show', $event->id)}}">表示</a>
 </td>
 </tr>
 @endif

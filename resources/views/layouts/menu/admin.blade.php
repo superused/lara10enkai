@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
         <div class="navbar-header">
-            <a href="{{route('home')}}" class="navbar-brand">宴会くん</a>
+            <a href="{{route('admin.user.index')}}" class="navbar-brand">宴会くん</a>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{__('Toggle navigation')}}">
             <span class="navbar-toggler-icon"></span>
@@ -12,6 +12,7 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">イベント</a>
                     <ul class="dropdown-menu">
+                        <li><a class="nav-link" href="{{route('home')}}">一覧</a></li>
                         <li><a class="nav-link" href="{{route('admin.event.mylist')}}">マイイベント一覧</a></li>
                         <li><a class="nav-link" href="{{route('admin.event.create')}}">新規登録</a></li>
                     </ul>

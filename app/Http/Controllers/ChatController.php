@@ -27,13 +27,12 @@ class ChatController extends Controller
         foreach ($eventusers as $num => $eventuser) {
             $participants += [$num => $eventuser->user_id];
         }
-        ////////////////////////////////////////////////
-
         ///////参加していなかったら一覧へ戻る
-        ///////参加していたらDBからチャットのデータを引っ張ってくる
         if (!in_array(\Auth::user()->id, $participants)) {
             return redirect("admin.event.show", $id);
-        } else {
+        }
+        ///////参加していたらDBからチャットのデータを引っ張ってくる
+        else {
             $event = Event::find($id);
             $chats = DB::table("chats")->select(
                 "chats.user_id",

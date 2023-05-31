@@ -30,7 +30,6 @@ class EventController extends Controller
     ->join("users","events.user_id", "=", "users.id")
         ->leftjoinSub($counts, "event_users", function (JoinClause $join) {
             $join->on("events.id", "=", "event_users.event_id");
-            //ここはプリペアードステートメントを作らないと本来はいけない。
         })->whereNull("events.deleted_at")->simplePaginate(5);
         return view("event.index", compact("events"));
     }
@@ -121,7 +120,7 @@ class EventController extends Controller
     public function show($id){
 
         $counts = DB::table("event_users")->select("event_id", DB::raw("COUNT(event_id) as count"))
-        ->groupBy("event_id");
+        ->groupBy("event_id")->whereNull("event_users.deleted_at");
         $events = DB::table("events")->select(
         "events.id",
         "events.name",
@@ -137,7 +136,8 @@ class EventController extends Controller
         ->leftjoinSub($counts, "event_users", function (JoinClause $join) {
             $join->on("events.id", "=", "event_users.event_id");
             //ここはプリペアードステートメントを作らないと本来はいけない。
-        })->where("events.id", "=", $id)->get();
+        })->where("events.id", "=", $id)
+        ->get();
 
         $eventusers = DB::table("event_users")->select(
             "event_users.id",
@@ -147,7 +147,8 @@ class EventController extends Controller
             "event_users.deleted_at",            
             )
         ->join("users","users.id", "=", "event_users.user_id")
-        ->where("event_users.event_id", "=", $id)->get();
+        ->where("event_users.event_id", "=", $id)
+        ->get();
 
         $currentevent = Event::find($id);
         $currentuser = \Auth::user()->id;

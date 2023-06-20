@@ -159,6 +159,7 @@ class EventController extends Controller
                 $participants += [$id => $eventuser->user_id]; 
             }
         }
+
         // var_dump($participants);
         return view("event.show", compact("events","eventusers","currentuser","currentevent","participants"));
     }

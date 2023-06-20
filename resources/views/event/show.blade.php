@@ -35,6 +35,9 @@
     </tr>
     @endforeach
 </table>
+@if($event->count>=$event->max_participant)
+<div class="alert alert-danger" role="alert">定員に達しています</div>
+@endif
 <table class="table table-bordered border-primary">
     <tr>
         <th class="bg-primary text-white">現在の参加者数</th>
@@ -49,7 +52,6 @@
         </td>
     </tr>
 </table>
-
 <h1 class="page-header">イベント参加者</h1>
 <table class="table table-striped" cellpadding="0" cellspaceing="0">
     <tr>
@@ -67,14 +69,18 @@
     @endif
     @endforeach
 </table>
+
 @if(empty($eventusers->all()) || (!in_array($currentuser, $participants)))
 <form action="{{route('admin.eventusers.store')}}" method="post">
         @csrf
+        @if($event->count>=$event->max_participant)
+        @else
         <div style="text-align: center;">
         <input type="hidden" name="event_id" value="{{$currentevent->id}}">
         <input type="hidden" name="user_id" value="{{$currentuser}}">
         <input class="btn btn-primary" type="submit" value="このイベントに参加する">
         </div>
+        @endif
         @else
         <form action="{{route('admin.eventusers.delete',$currentevent->id)}}" method="post">
             @csrf

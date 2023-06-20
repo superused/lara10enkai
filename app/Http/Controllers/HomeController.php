@@ -28,7 +28,7 @@ class HomeController extends Controller
     public function index()
     {
         $counts = DB::table("event_users")->select("event_id", DB::raw("COUNT(event_id) as count"))
-        ->groupBy("event_id");
+        ->groupBy("event_id")->whereNull("event_users.deleted_at");
         $events = DB::table("events")->select(
         "events.id",
         "events.name",
@@ -53,7 +53,7 @@ class HomeController extends Controller
     public function show($id){
 
         $counts = DB::table("event_users")->select("event_id", DB::raw("COUNT(event_id) as count"))
-        ->groupBy("event_id");
+        ->groupBy("event_id")->whereNull("event_users.deleted_at");
         $events = DB::table("events")->select(
         "events.id",
         "events.name",

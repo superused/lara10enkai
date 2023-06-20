@@ -1,0 +1,159 @@
+laravelをdockerの~/docker/phptest/src以下で立ち上げようとしたところvendorがありませんというエラーが出たのでメモ
+エラー
+/app/vendor/autoload.php : failed to open stream: No such file or directory in～～～
+
+#よってコンポーザーを入れてvendorを構築する
+
+#まずはwslにphpをインストール
+
+$sudo apt install -y php8.1
+
+#以下を実行する
+$ composer install
+
+#すると以下のようなエラー
+Installing dependencies from lock file (including require-dev)
+Verifying lock file contents can be installed on current platform.
+
+///////composer updateをやってみなさいというエラー//////////////////////
+Your lock file does not contain a compatible set of packages. Please run composer update.
+////////////////////////////////////////////////////////////////////////
+
+
+#よって以下を実行
+$ composer update
+
+#すると以下のようなエラーが出る
+//////////エラー文のクリティカルな部分///////////////
+  Problem 1
+    - laravel/pint[v1.0.0, ..., v1.10.2] require ext-xml * -> it is missing from your system. Install or enable PHP's xml extension.
+    - Root composer.json requires laravel/pint ^1.0 -> satisfiable by laravel/pint[v1.0.0, ..., v1.10.2].
+/////////////////////////////////////////////////////
+
+#xmlが必要だよというようなエラー？
+#なので以下を実行
+$sudo apt install -y php-xml
+
+#これで
+$ composer update
+#が成功
+
+$ composer install
+#も成功
+
+#以下のコマンドでlaravelサーバーを立ち上げる
+$php artisan server
+
+#すると以下のようなエラーが出る。
+Fatal error: Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 8.0.29. in /var/www/html/lara8enkai/vendor/composer/platform_check.php on line 24
+
+#どうやらlaravelのバージョンが少し古いらしい。
+
+
+
+
+
+
+エラーログを出力するようにしてみる
+参考：
+https://tyablog.net/2017/12/27/docker-php-error-log/
+
+以下のようなエラー
+[Mon Jun 19 08:25:06.877348 2023] [php:error] [pid 21] [client 172.18.0.1:43218] PHP Fatal error:  Uncaught ErrorException: file_put_contents(/var/www/html/lara8enkai/storage/framework/views/2f3e815a534383ed1c3a611197595e31.php): Failed to open stream: Permission denied in /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:205\nStack trace:\n#0 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(254): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/l...', 205)\n#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'file_put_conten...', '/var/www/html/l...', 205)\n#2 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(205): file_put_contents('/var/www/html/l...', '<?php $__env->s...', 0)\n#3 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/View/Compilers/BladeCompiler.php(185): Illuminate\\Filesystem\\Filesystem->put('/var/www/html/l...', '<?php $__env->s...')\n#4 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(62): Illuminate\\View\\Compilers\\BladeCompiler->compile('/var/www/html/l...')\n#5 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/View/View.php(195): Illuminate\\View\\Engines\\CompilerEngine->get('/var/www/html/l...', Array)\n#6 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/View/View.php(178): Illuminate\\View\\View->getContents()\n#7 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/View/View.php(147): Illuminate\\View\\View->renderContents()\n#8 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Http/Response.php(69): Illuminate\\View\\View->render()\n#9 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Http/Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))\n#10 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Routing/ResponseFactory.php(57): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 500, Array)\n#11 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Routing/ResponseFactory.php(87): Illuminate\\Routing\\ResponseFactory->make(Object(Illuminate\\View\\View), 500, Array)\n#12 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(648): Illuminate\\Routing\\ResponseFactory->view('errors::500', Array, 500, Array)\n#13 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(573): Illuminate\\Foundation\\Exceptions\\Handler->renderHttpException(Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))\n#14 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(479): Illuminate\\Foundation\\Exceptions\\Handler->prepareResponse(Object(Illuminate\\Http\\Request), Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))\n#15 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(396): Illuminate\\Foundation\\Exceptions\\Handler->renderExceptionResponse(Object(Illuminate\\Http\\Request), Object(UnexpectedValueException))\n#16 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(217): Illuminate\\Foundation\\Exceptions\\Handler->render(Object(Illuminate\\Http\\Request), Object(UnexpectedValueException))\n#17 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(194): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->renderHttpResponse(Object(UnexpectedValueException))\n#18 /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(254): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleException(Object(UnexpectedValueException))\n#19 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(Object(UnexpectedValueException))\n#20 {main}\n  thrown in /var/www/html/lara8enkai/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php on line 205
+
+以下のURLを参考にしながらpermission系のエラーに関して対策を講じる
+https://www.thirtyfive.info/entry/2018/06/07/laravel%E3%81%AE%E8%B5%B7%E5%8B%95%E8%A8%AD%E5%AE%9A%E3%81%A8%E3%82%A8%E3%83%A9%E3%83%BC#%E3%82%A8%E3%83%A9%E3%83%BC%E3%83%AD%E3%82%B0%E3%81%A7failed-to-open-stream-Permission-denied-in-
+
+まずviewのパーミッションを変えてみる
+$sudo chmod 777 /var/www/html/sample/storage/framework/views/
+
+レスポンスコードは500になっている。
+エラーログには何も出ていない。
+`.env`ファイルが無いとこうなるらしい。
+プロジェクトのディレクトリにある`.env.examp`をコピーして`.env`を作ることで解消する。
+$ cp .env.example .env
+
+
+画面いっぱいにエラーが表示される。
+またパーミッションエラーっぽい。
+
+The stream or file "/var/www/html/lara8enkai/storage/logs/laravel.log" could not be opened~~~
+ここも単純にパーミッションを変える。
+
+$ sudo chmod 777 /var/www/html/sample/storage/logs/*.log
+
+No application encryption key has been specifiedと出る
+
+以下を実行
+＄php artisan key:generate
+
+Application key set successfully.
+と出る
+
+以下のエラーが出る
+file_put_contents(/var/www/html/lara8enkai/storage/framework/sessions/lkPMFqdswLBS2iPqxAcQCQDIZA8aggcyTBWhtTOx): Failed to open stream: Permission denied
+
+$ sudo chmod 777 /var/www/html/sample/storage/framework/sessions
+
+今度はセッションが書けないらしい。storage以下は全部パーミッション変えたほうが良いのかな。
+・・・・ここまでの内容で記事は終わっている。どうやらキャッシュ系の権限が強いと使えないようである。
+基本的にはchmodで許可するが本番でそれをやるとあまりよくなさそうではある
+
+ここまで終えて実行すると以下のようなDB系のエラーが出る
+SQLSTATE[HY000] [2002]…
+
+.envファイルの中の以下を書き換える
+DB_HOST=127.0.0.1
+=>DB_HOST=phptest_db
+
+DB_PASSWORD=""
+=>DB_PASSWORD=no1s
+参考：「https://zenn.dev/hashi8084/articles/84cf664e587d44」
+
+あとはキャッシュのクリアを行う
+$ php artisan cache:clear
+$ php artisan config:clear
+$ php artisan route:clear
+$ php artisan view:clear
+
+これをやることで見に行けるようになる
+
+但し、これではしっかりとCSSが読み込めず書式が崩れる
+この原因を調べる
+
+以下のURLを参考に設定ファイルの書き換えを実行
+https://oki2a24.com/2022/08/28/connect-vite-dev-server-at-npm-run-dev-in-wls2-docker-laravel9-2-vite-spa/
+
+docker-compose.ymlのポートで5173を追記して開放する
+///////////////
+php:
+    container_name: php-laravel
+    ports:
+      - 5173:5173
+    ...
+//////////////
+
+変更後
+$docker-compose up -d --build
+でリビルドしてサーバーをリスタート
+
+vite.config.jsの中を以下のように書き換える
+/////////////////
+export default defineConfig({
+    server: {
+        host: true,
+        hmr: { 
+            host: 'localhost'
+        },
+    },
+    plugins: [
+        ...
+    ],
+});
+///////////////////
+
+このようにしたら
+$npm run dev
+でうまくいく。
+
+

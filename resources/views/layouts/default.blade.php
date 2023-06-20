@@ -6,9 +6,9 @@
     @yield('metaIcon')
     <title>@yield('title')</title>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <!-- <link rel="stylesheet" href="{{asset('css/style.css')}}"> -->
     @yield("css")
-    <script src="{{asset('js/app.js')}}"></script>
+    <!-- <script src="{{asset('js/app.js')}}"></script> -->
 </head>
 <body>
     @yield('menu')
